@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import DropdownIcon from '../../assets/icons/arrow_circle_down.svg?react';
 import DateIcon from '../../assets/icons/calendar_today.svg?react';
 import CheckboxIcon from '../../assets/icons/check_circle.svg?react';
@@ -6,20 +6,25 @@ import ShortTextIcon from '../../assets/icons/check_indeterminate_small.svg?reac
 import MultipleChoiceIcon from '../../assets/icons/checklist.svg?react';
 import TimeIcon from '../../assets/icons/schedule.svg?react';
 import LongTextIcon from '../../assets/icons/subject.svg?react';
+import Question from '../../models/question';
 import { QuestionTypeValueType } from '../../types/app';
 import Dropdown from '../common/Dropdown';
 import Input from '../common/Input';
 import Panel, { PanelBody, PanelHeader } from '../common/Panel';
 import QuestionBodyEditor from './QuestionBodyEditor';
 
-export default function QuestionEditor() {
-  const [type, setType] = useState<QuestionTypeValueType>('shortText');
+interface Props {
+  question: Question;
+}
+
+const QuestionEditor = observer(function QuestionEditor({ question }: Props) {
   return (
     <Panel>
       <PanelHeader className="flex mb-25">
         <Input className="flex-1 mr-30" />
         <Dropdown<QuestionTypeValueType>
-          onChange={setType}
+          defaultValue={question.type}
+          onChange={value => question.setType(value)}
           options={[
             {
               label: (
@@ -88,8 +93,10 @@ export default function QuestionEditor() {
         />
       </PanelHeader>
       <PanelBody>
-        <QuestionBodyEditor type={type} />
+        <QuestionBodyEditor type={question.type} />
       </PanelBody>
     </Panel>
   );
-}
+});
+
+export default QuestionEditor;

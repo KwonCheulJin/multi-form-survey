@@ -1,4 +1,12 @@
-export const QuestionType = {
+export type QuestionType =
+  | 'shortText'
+  | 'longText'
+  | 'multipleChoice'
+  | 'checkbox'
+  | 'dropdown'
+  | 'date'
+  | 'time';
+export const Question = {
   ShortText: 'shortText',
   LongText: 'longText',
   MultipleChoice: 'multipleChoice',
@@ -8,4 +16,4 @@ export const QuestionType = {
   Time: 'time',
 } as const;
 
-export type QuestionTypeValueType = ValueOf<typeof QuestionType>;
+export type QuestionTypeValueType = ValueOf<typeof Question>;

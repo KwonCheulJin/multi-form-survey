@@ -11,16 +11,22 @@ import ArrowIcon from '../../assets/icons/arrow_drop_down.svg?react';
 import useOutsideClick from '../../hooks/common/useOutsideClick';
 interface Props<T> {
   options: DropdownOption<T>[];
+  defaultValue?: T;
   placeholder?: string;
   onChange?: (value: T) => void;
 }
 export default function Dropdown<T>({
   options,
+  defaultValue,
   onChange,
   placeholder,
 }: Props<T>) {
   const [opened, setOpened] = useState(false);
-  const [selected, setSelected] = useState(-1);
+  const [selected, setSelected] = useState(
+    defaultValue
+      ? options.findIndex(option => option.value === defaultValue)
+      : -1
+  );
 
   const open = useCallback(() => setOpened(true), []);
   const close = useCallback(() => setOpened(false), []);
@@ -70,8 +76,8 @@ interface DropdownContextType<T = unknown> {
 const DropdownContext = createContext<DropdownContextType | null>(null);
 
 function DropdownButton({ placeholder = 'select' }: { placeholder?: string }) {
-  const { opened, open, options, selected } = useContext(DropdownContext)!;
-  console.log('🚀 ~ DropdownButton ~ opened:', opened);
+  const { open, options, selected } = useContext(DropdownContext)!;
+
   return (
     <button
       className="border-gray300 border rounded-10 min-w-197 p-14 pr-36 relative text-left"
@@ -91,7 +97,7 @@ function DropdownMenu() {
   return opened ? (
     <div
       ref={containerRef as RefObject<HTMLDivElement>}
-      className="absolute left-0 top-64 border border-gray300 rounded-10 flex flex-col min-w-197 bg-white"
+      className="absolute left-0 top-64 border border-gray300 rounded-10 flex flex-col min-w-197 bg-white z-50"
     >
       {options.map((option, index) => (
         <DropdownMenuItem
